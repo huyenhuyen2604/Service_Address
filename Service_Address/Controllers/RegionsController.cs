@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using Service_Address.Models;
 using Service_Address.Service;
 
@@ -28,8 +29,20 @@ namespace Service_Address.Controllers
 
             try
             {
+                var _filter = _regionsServiec.BuilderFilter(new RegionsFitler
+                {
+                    id = regions.id //id này là duy nhất
+                });
+                var _exists = await _regionsServiec.AnyAsync(_filter);
+                // Thêm mơi
                 await _regionsServiec.InsertOneAsync(regions);
-                return Ok();
+                /// Lấy dữ liệu
+                var rs = (await _regionsServiec.FindAsync(
+                    filter: _filter,
+                    fields: typeof(States).GetProperties().Select(x => x.Name).ToList()
+                    )).FirstOrDefault();
+                return Ok(rs);
+
             }
             catch (Exception ex)
             {
@@ -52,22 +65,7 @@ namespace Service_Address.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateOneAsync(string id, Regions regions)
         {
-            //try
-            //{
-            //    // Gán lại dữ liêu
-
-            //    await _regionsServiec.UpdateOneAsync(id, regions);
-            //    return Ok();
-            //}
-            //catch (Exception ex)
-            //{
-            //    return BadRequest(new RsMessage
-            //    {
-            //        status = false,
-            //        message = ex.Message
-            //    });
-            //}
-
+           
             try
             {
                 // Gán lại dữ liêu
@@ -75,9 +73,9 @@ namespace Service_Address.Controllers
                 var _filter = _regionsServiec.BuilderFilter(new RegionsFitler { id = id });
                 // Update dữ liệu
                 await _regionsServiec.UpdateOneAsync(Convert.ToString(id), regions);
-               
-
-                return Ok();
+                // Lấy lại chi tiết
+                var rs = (await _regionsServiec.FindAsync(filter: _filter, fields: typeof(States).GetProperties().Select(x => x.Name).ToList())).FirstOrDefault();
+                return Ok(rs);
             }
             catch (Exception ex)
             {

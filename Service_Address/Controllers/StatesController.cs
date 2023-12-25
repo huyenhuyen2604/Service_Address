@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using Service_Address.Models;
 using Service_Address.Service;
 
@@ -21,10 +22,20 @@ namespace Service_Address.Controllers
 
             try
             {
-
+                var _filter = _statesService.BuilderFilter(new StatesFilter
+                {
+                    id = states.id //id này là duy nhất
+                });
+                var _exists = await _statesService.AnyAsync(_filter);
                 // Thêm mơi
                 await _statesService.InsertOneAsync(states);
-                return Ok();
+                //// Lấy dữ liệu
+                var rs = (await _statesService.FindAsync(
+                    filter: _filter,
+                    fields: typeof(States).GetProperties().Select(x => x.Name).ToList()
+                    )).FirstOrDefault();
+                return Ok(rs);
+               
             }
             catch (Exception ex)
             {
@@ -48,13 +59,14 @@ namespace Service_Address.Controllers
         {
             try
             {
-                // Gán lại dữ liêu
+                // Gán lại dữ liệu
                 states.id = id;
                 var _filter = _statesService.BuilderFilter(new StatesFilter { id = id });
                 // Update dữ liệu
                 await _statesService.UpdateOneAsync(_filter, states);
                 // Lấy lại chi tiết
-                return Ok();
+                var rs = (await _statesService.FindAsync(filter: _filter, fields: typeof(States).GetProperties().Select(x => x.Name).ToList())).FirstOrDefault();
+                return Ok(rs);
             }
             catch (Exception ex)
             {

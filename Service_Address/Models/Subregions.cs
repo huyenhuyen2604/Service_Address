@@ -15,3 +15,4 @@ namespace Service_Address.Models
         public string? wikiDataId { get; set; }
     }
 }
+

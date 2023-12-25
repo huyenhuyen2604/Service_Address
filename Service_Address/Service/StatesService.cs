@@ -47,6 +47,76 @@ namespace Service_Address.Service
         }
 
 
+        /// <summary>
+        /// Kiểm tra dữ liệu tồn tại hay không
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public Task<bool> AnyAsync(FilterDefinition<States> filter)
+        {
+            return _Collection.Find(filter).AnyAsync();
+        }
+
+        /// <summary>
+        /// Lấy danh sách student
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="fields"></param>
+        /// <param name="sort_by"></param>
+        public Task<IAsyncCursor<States>> FindAsync(FilterDefinition<States> filter, int? page = 1, int? limit = 250, List<string>? fields = null, string? sort_by = "id_desc")
+        {
+            try
+            {
+                if (_Collection == null) throw new Exception("Collection null");
+
+                // Lấy trường nào
+                if (fields != null && fields.Count > 0)
+                {
+                    _FieldsDefault = Builders<States>.Projection.Include(fields.First());
+                    foreach (var field in fields.Skip(1)) _FieldsDefault = _FieldsDefault.Include(field);
+                }
+
+                // Sắp xếp kiểu gì
+                var _sort_builder = Builders<States>.Sort;
+                var _sort = _sort_builder.Descending("id");
+                switch (sort_by)
+                {
+                    case "id_desc":
+                        _sort = _sort_builder.Descending("id");
+                        break;
+                    case "id_asc":
+                        _sort = _sort_builder.Ascending("id");
+                        break;
+                    case "name_asc":
+                        _sort = _sort_builder.Ascending("name");
+                        break;
+                    case "name_desc":
+                        _sort = _sort_builder.Descending("name");
+                        break;
+
+
+                    default: break;
+                }
+                return _Collection.FindAsync(filter, new FindOptions<States, States>
+                {
+                    AllowDiskUse = true,
+                    Limit = limit,
+                    Skip = (page - 1) * limit,
+                    Projection = _FieldsDefault,
+                    Sort = _sort,
+                });
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+
         ///<summary>
         /// Tạo mới Subregions
         /// </summary>
