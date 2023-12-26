@@ -28,6 +28,84 @@ namespace Service_Address.Service
             _Collection = database.GetCollection<Subregions>(CollectionName);
         }
 
+        /// <summary>
+        /// Kiểm tra dữ liệu tồn tại hay không
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public Task<bool> AnyAsync(FilterDefinition<Subregions> filter)
+        {
+            return _Collection.Find(filter).AnyAsync();
+        }
+
+
+        ///<summary>
+        ///Tìm kiếm theo bộ lọc
+        /// </summary>
+        public FilterDefinition<Subregions> BuilderFilter(SubregionsFitler subregionsFitler )
+        {
+            var _builder = Builders<Subregions>.Filter;
+            var _filter = _builder.Ne(c => c.id, null);
+            // Tìm kiếm theo id
+            if (!string.IsNullOrEmpty(subregionsFitler.id)) _filter &= _builder.Eq(c => c.id, subregionsFitler.id);
+            // Tìm kiếm theo name
+            if (!string.IsNullOrEmpty(subregionsFitler.name)) _filter &= _builder.Eq(c => c.name, subregionsFitler.name);
+
+            return _filter;
+        }
+
+
+
+        /// Lấy danh sách student
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="fields"></param>
+        /// <param name="sort_by"></param>
+        public Task<IAsyncCursor<Subregions>> FindAsync(FilterDefinition<Subregions> filter, int? page = 1, int? limit = 250, List<string>? fields = null, string? sort_by = "id_desc")
+        {
+
+            // Lấy trường nào, kiểm tra các trường có bị null không và điều kiện các trường lớn hơn 0
+            if (fields != null && fields.Count > 0)
+            {
+                _FieldsDefault = Builders<Subregions>.Projection.Include(fields.First());
+                foreach (var field in fields.Skip(1)) _FieldsDefault = _FieldsDefault.Include(field);
+            }
+
+            // sắp xếp các trường theo kiểu tăng dần giảm dần theo yêu cầu cần sắp xếp
+            var _sort_builder = Builders<Subregions>.Sort;
+            var _sort = _sort_builder.Descending("id");
+            switch (sort_by)
+            {
+                case "id_desc":
+                    _sort = _sort_builder.Descending("id");
+                    break;
+                case "id_asc":
+                    _sort = _sort_builder.Ascending("id");
+                    break;
+                case "name_asc":
+                    _sort = _sort_builder.Ascending("name");
+                    break;
+                case "name_desc":
+                    _sort = _sort_builder.Descending("name");
+                    break;
+
+
+                default: break;
+            }
+            return _Collection.FindAsync(filter, new FindOptions<Subregions, Subregions>
+            {
+                AllowDiskUse = true,
+                Limit = limit,
+                Skip = (page - 1) * limit,
+                Projection = _FieldsDefault,
+                Sort = _sort,
+            });
+
+        }
+
+
         ///<summary>
         /// Tạo mới Subregions
         /// </summary>

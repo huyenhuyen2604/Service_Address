@@ -47,18 +47,19 @@ namespace Service_Address.Service
         /// <param name="sort_by"></param>
         public Task<IAsyncCursor<Regions>> FindAsync(FilterDefinition<Regions> filter, int? page = 1, int? limit = 250, List<string>? fields = null, string? sort_by = "id_desc")
         {
-            
-               
 
-                // Lấy trường nào
-                if (fields != null && fields.Count > 0)
+
+
+
+            // Lấy trường nào, kiểm tra các trường có bị null không và điều kiện các trường lớn hơn 0
+            if (fields != null && fields.Count > 0)
                 {
                     _FieldsDefault = Builders<Regions>.Projection.Include(fields.First());
                     foreach (var field in fields.Skip(1)) _FieldsDefault = _FieldsDefault.Include(field);
                 }
 
-                // Sắp xếp kiểu gì
-                var _sort_builder = Builders<Regions>.Sort;
+            // sắp xếp các trường theo kiểu tăng dần giảm dần theo yêu cầu cần sắp xếp
+            var _sort_builder = Builders<Regions>.Sort;
                 var _sort = _sort_builder.Descending("id");
                 switch (sort_by)
                 {
@@ -108,6 +109,7 @@ namespace Service_Address.Service
             if (!string.IsNullOrEmpty(regionsFitler.name)) _filter &= _builder.Eq(c => c.name, regionsFitler.name);
             return Convert.ToString(_filter);
         }
+
         /// <summary>
         /// Tạo mới 1 bản ghi
         /// </summary>

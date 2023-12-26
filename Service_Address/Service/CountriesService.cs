@@ -54,14 +54,15 @@ namespace Service_Address.Service
 
 
 
-            // Lấy trường nào
+
+            // Lấy trường nào, kiểm tra các trường có bị null không và điều kiện các trường lớn hơn 0
             if (fields != null && fields.Count > 0)
             {
                 _FieldsDefault = Builders<Countries>.Projection.Include(fields.First());
                 foreach (var field in fields.Skip(1)) _FieldsDefault = _FieldsDefault.Include(field);
             }
 
-            // Sắp xếp kiểu gì
+            // sắp xếp các trường theo kiểu tăng dần giảm dần theo yêu cầu cần sắp xếp
             var _sort_builder = Builders<Countries>.Sort;
             var _sort = _sort_builder.Descending("id");
             switch (sort_by)

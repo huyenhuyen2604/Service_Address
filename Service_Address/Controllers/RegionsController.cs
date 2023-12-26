@@ -33,16 +33,14 @@ namespace Service_Address.Controllers
                 {
                     id = regions.id //id này là duy nhất
                 });
-                var _exists = await _regionsServiec.AnyAsync(_filter);
-                // Thêm mơi
+                // Thêm mới dữ liệu gọi lại từ RegionsServiec
                 await _regionsServiec.InsertOneAsync(regions);
-                /// Lấy dữ liệu
+                // lấy dữ liệu
                 var rs = (await _regionsServiec.FindAsync(
                     filter: _filter,
-                    fields: typeof(States).GetProperties().Select(x => x.Name).ToList()
+                    fields: typeof(Regions).GetProperties().Select(x => x.Name).ToList()
                     )).FirstOrDefault();
                 return Ok(rs);
-
             }
             catch (Exception ex)
             {
@@ -74,7 +72,7 @@ namespace Service_Address.Controllers
                 // Update dữ liệu
                 await _regionsServiec.UpdateOneAsync(Convert.ToString(id), regions);
                 // Lấy lại chi tiết
-                var rs = (await _regionsServiec.FindAsync(filter: _filter, fields: typeof(States).GetProperties().Select(x => x.Name).ToList())).FirstOrDefault();
+                var rs = (await _regionsServiec.FindAsync(filter: _filter, fields: typeof(Regions).GetProperties().Select(x => x.Name).ToList())).FirstOrDefault();
                 return Ok(rs);
             }
             catch (Exception ex)
@@ -96,9 +94,20 @@ namespace Service_Address.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteManyAsync(RegionsFitler regionsFitler)
         {
-            var _filter = _regionsServiec.BuilderFilter(regionsFitler);
-            await _regionsServiec.DeleteOneAsync(_filter);
-            return Ok();
+            try
+            {
+                var _filter = _regionsServiec.BuilderFilter(regionsFitler);
+                await _regionsServiec.DeleteOneAsync(_filter);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new RsMessage
+                {
+                    status = false,
+                    message = ex.Message
+                });
+            }
 
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using Service_Address.Models;
 using Service_Address.Service;
 
@@ -25,12 +26,20 @@ namespace Service_Address.Controllers
         [HttpPost]
         public async Task<IActionResult> InsertOneAsync(Cities cities)
         {
-
             try
             {
-
+                var _filter = _citiesService.BuilderFilter(new CitiesFilter
+                {
+                    id = cities.id //id này là duy nhất
+                });
+                // Thêm mới dữ liệu gọi lại từ servieccountries
                 await _citiesService.InsertOneAsync(cities);
-                return Ok();
+                // lấy dữ liệu
+                var rs = (await _citiesService.FindAsync(
+                    filter: _filter,
+                    fields: typeof(Cities).GetProperties().Select(x => x.Name).ToList()
+                    )).FirstOrDefault();
+                return Ok(rs);
             }
             catch (Exception ex)
             {
@@ -40,7 +49,6 @@ namespace Service_Address.Controllers
                     message = ex.Message
                 });
             }
-
 
         }
 
