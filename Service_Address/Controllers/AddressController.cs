@@ -18,22 +18,23 @@ namespace Service_Address.Controllers
         }
 
         /// <summary>
-        /// đọc dữ liệu từ file json  này được sử dụng để lấy dữ liệu và trả về nó dưới dạng JSON
+        /// đọc dữ liệu từ file json
         /// </summary>
         /// <returns></returns>
         [HttpGet("regions")]
-        public IActionResult GetRegions([FromBody] string jsonString)
+        public IActionResult GetRegions()
         {
             string jsonFilePath = "C:\\Users\\HuyenVu\\OneDrive\\Desktop\\LenfulCode\\Service_Address\\Service_Address\\regions.json"; // Đặt đường dẫn thực tế đến tệp JSON của bạn
 
             List<Regions> regions = _fileProcessingService1.GetAndRegions(jsonFilePath);
+          
 
             return Ok(regions);
         }
 
 
         /// <summary>
-        /// đọc dữ liệu từ file json  này được sử dụng để lấy dữ liệu và trả về nó dưới dạng JSON
+        /// đọc lấy dữ liệu từ file json
         /// </summary>
         /// <returns></returns>
         [HttpGet("Countries")]
@@ -46,7 +47,7 @@ namespace Service_Address.Controllers
             return Ok(countries);
         }
         /// <summary>
-        /// đọc dữ liệu từ file json  này được sử dụng để lấy dữ liệu và trả về nó dưới dạng JSON
+        /// đọc lấy dữ liệu từ file json
         /// </summary>
         /// <returns></returns>
         [HttpGet("States")]
@@ -59,7 +60,7 @@ namespace Service_Address.Controllers
             return Ok(states);
         }
         /// <summary>
-        /// đọc dữ liệu từ file json  này được sử dụng để lấy dữ liệu và trả về nó dưới dạng JSON
+        /// đọc lấy dữ liệu từ file json
         /// </summary>
         /// <returns></returns>
         [HttpGet("Cities")]
@@ -72,7 +73,7 @@ namespace Service_Address.Controllers
             return Ok(cities);
         }
         /// <summary>
-        /// đọc dữ liệu từ file json  này được sử dụng để lấy dữ liệu và trả về nó dưới dạng JSON
+        /// đọc dữ liệu từ file json
         /// </summary>
         /// <returns></returns>
         [HttpGet("Subregions")]
