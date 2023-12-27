@@ -17,6 +17,7 @@ builder.Services.AddScoped<CitiesService>();
 builder.Services.AddScoped<RegionsServiec>();
 builder.Services.AddScoped<StatesService>();
 builder.Services.AddScoped<SubregionsService>();
+builder.Services.AddScoped<FileProcessingService>();
 
 
 
