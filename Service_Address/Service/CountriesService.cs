@@ -29,6 +29,30 @@ namespace Service_Address.Service
             _Collection = database.GetCollection<Countries>(CollectionName);
         }
 
+        ///// <summary>
+        ///// Xử lý sự kiện thêm nhiều country
+        ///// </summary>
+        ///// <param name="countries"></param>
+        ///// <returns></returns>
+        //private async Task InsertMultiCountry(List<Countries>? countries)
+        //{
+        //    if (countries == null || countries.Count == 0) return;
+        //    foreach (var country in countries)
+        //    {
+        //        try
+        //        {
+        //            await _Collection.InsertOneAsync(country);
+        //            // cho nó nghỉ 50ms không oẳng giờ
+        //            await Task.Delay(100);
+        //        }
+        //        catch
+        //        {
+        //            continue;
+        //        }
+        //    }
+        //}
+
+
 
 
         /// <summary>

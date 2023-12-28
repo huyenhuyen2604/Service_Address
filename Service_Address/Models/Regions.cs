@@ -21,4 +21,16 @@ namespace Service_Address.Models
         public List<String>? names { get; set; }
 
     }
+
+    public class Region: Regions
+    {
+        [BsonId]
+        [BsonIgnoreIfDefault]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public String? id { get; set; }
+
+        public string? name { get; set; }
+
+        public string? wikiDataId { get; set; }
+    }
 }

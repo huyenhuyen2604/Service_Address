@@ -24,14 +24,104 @@ namespace Service_Address.Service
         /// </summary>
         /// <param name="jsonString"></param>
         /// <returns></returns>
-        public Regions ConvertJsonToObject(string jsonString)
-        {
-            Regions regions = Newtonsoft.Json.JsonConvert.DeserializeObject<Regions>(jsonString);
-            return regions;
-        }
+        //public Regions ConvertJsonToObject(string jsonString)
+        //{
+        //    Regions regions = Newtonsoft.Json.JsonConvert.DeserializeObject<Regions>(jsonString);
+        //    return regions;
+        //}
         #endregion
 
+        #region upload file
+        //public interface IBufferedFileUploadService
+        //{
+        //    Task<bool> UploadFile(IFormFile file);
+        //}
 
+        //public class BufferedFileUploadLocalService : IBufferedFileUploadService
+        //{
+        //    public async Task<bool> UploadFile(IFormFile file)
+        //    {
+        //        string path = "C:\\Users\\HuyenVu\\OneDrive\\Desktop\\LenfulCode\\Service_Address\\Service_Address\\regions.json";
+        //        try
+        //        {
+        //            if (file.Length > 0)
+        //            {
+        //                path = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "UploadedFiles"));
+        //                if (!Directory.Exists(path))
+        //                {
+        //                    Directory.CreateDirectory(path);
+        //                }
+        //                using (var fileStream = new FileStream(Path.Combine(path, file.FileName), FileMode.Create))
+        //                {
+        //                    await file.CopyToAsync(fileStream);
+        //                }
+        //                return true;
+        //            }
+        //            else
+        //            {
+        //                return false;
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            throw new Exception("File Copy Failed", ex);
+        //        }
+        //    }
+        //}
+
+
+        //public async Task<string> UploadFileAsync(IFormFile file)
+        //{
+        //    if (file == null || file.Length == 0)
+        //        return "File not selected or empty";
+
+        //    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+
+        //    if (!Directory.Exists(uploadPath))
+        //        Directory.CreateDirectory(uploadPath);
+
+        //    var filePath = Path.Combine(uploadPath, file.FileName);
+
+        //    using (var stream = new FileStream(filePath, FileMode.Create))
+        //    {
+        //        await file.CopyToAsync(stream);
+        //    }
+
+        //    return "File uploaded successfully";
+        //}
+
+
+        /// <summary>
+        /// Upload file
+        /// </summary>
+        /// <returns></returns>
+
+        public async Task<string> UploadFileAsync(IFormFile file, string jsonData)
+        {
+            // Deserialize JSON data
+            var additionalData = Newtonsoft.Json.JsonConvert.DeserializeObject<Regions>(jsonData);
+
+            if (file == null || file.Length == 0)
+                return "File not selected or empty";
+
+            // Use additionalData as needed...
+
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+
+            if (!Directory.Exists(uploadPath))
+                Directory.CreateDirectory(uploadPath);
+
+            var filePath = Path.Combine(uploadPath, file.FileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return "File uploaded successfully";
+        }
+
+        #endregion
 
 
         /// <summary>

@@ -1,9 +1,9 @@
-﻿
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Driver;
+using Newtonsoft.Json;
 using SharpCompress.Common;
 using System;
 using System.Collections.Generic;
@@ -38,9 +38,9 @@ namespace Helpers
         }
     }
 
-   
 
-   
+
+
 
 
 
@@ -94,6 +94,35 @@ namespace Helpers
                 return definition;
             }
             else return null;
+        }
+
+
+
+        /// <summary>
+        /// Convert 1 chuỗi thành Json Object
+        /// </summary>
+        /// <typeparam name="T">Kiểu Object muốn convert</typeparam>
+        /// <param name="this">Chuỗi Jecon</param>
+        /// <param name="result">Object sau khi convert được</param>
+        /// <returns></returns>
+        public static T? JsonToObject<T>(this string @this)
+        {
+            //--
+            try
+            {
+                var settings = new JsonSerializerSettings
+                {
+                    Error = (sender, args) => { args.ErrorContext.Handled = true; },
+                    MissingMemberHandling = MissingMemberHandling.Ignore
+                };
+
+                var _rs = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(@this, settings);
+                return _rs;
+            }
+            catch (Exception)
+            {
+                return default;
+            }
         }
         /// <summary>
         /// Kiểm tra và thay đổi chuỗi truy vấn update
