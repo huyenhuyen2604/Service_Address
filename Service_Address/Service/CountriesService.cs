@@ -188,10 +188,19 @@ namespace Service_Address.Service
         public Task<DeleteResult> DeleteOneAsync(FilterDefinition<Countries> filter)
         {
            
+
+
                 return _Collection.DeleteOneAsync(filter);
         }
 
-        
+
+        /// <summary>
+        /// Lấy danh sách countries
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+       
+
     }
 
 

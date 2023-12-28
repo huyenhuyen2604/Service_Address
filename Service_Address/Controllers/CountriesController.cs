@@ -89,7 +89,7 @@ namespace Service_Address.Controllers
                 //return Ok("Ok nhé");
 
 
-                ////// Đọc nội dung file
+                //// Đọc nội dung file
                 //var fileContent = await reader.ReadToEndAsync();
                 //if (!string.IsNullOrEmpty(fileContent))
                 //{
@@ -97,8 +97,8 @@ namespace Service_Address.Controllers
                 //    var countries = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Countries>>(fileContent);
                 //    await InsertMultiCountry(countries);
                 //}
-                ////// Xử lý dữ liệu tệp văn bản ở đây
-                ////// Ví dụ: Lưu vào cơ sở dữ liệu, xử lý nghiệp vụ, vv.
+                //// Xử lý dữ liệu tệp văn bản ở đây
+                //// Ví dụ: Lưu vào cơ sở dữ liệu, xử lý nghiệp vụ, vv.
 
                 return Ok("Import successful");
             }
